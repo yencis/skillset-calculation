@@ -9,3 +9,9 @@ api = Ossapi(
 
 most_played = api.search_beatmapsets(sort=BeatmapsetSearchSort.PLAYS_DESCENDING)
 print([bp.title for bp in most_played.beatmapsets])
+
+cursor = most_played.cursor
+print(most_played.cursor)
+
+most_played = api.search_beatmapsets(sort=BeatmapsetSearchSort.PLAYS_DESCENDING, cursor=cursor)
+print([bp.title for bp in most_played.beatmapsets])
