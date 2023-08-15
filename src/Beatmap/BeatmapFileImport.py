@@ -3,6 +3,7 @@ from Beatmap.Object.TimingPoint import TimingPoint
 from Beatmap.Object.Slider import Slider
 from Beatmap.Object.HitObject import HitObject
 from Beatmap.Object.HitCircle import HitCircle
+from Beatmap.Object.Spinner import Spinner
 
 """
 Import hitobjects from .osu file
@@ -11,6 +12,9 @@ Import hitobjects from .osu file
 
 def is_slider(obj_type):
     return obj_type & 2 == 2
+
+def is_spinner(obj_type):
+    return obj_type & 8 == 8
 
 
 def import_beatmap(filename):
@@ -105,6 +109,8 @@ def import_beatmap(filename):
                 slider_velocity = current_beatmap.get_sv_at(slider_obj.time)
                 slider_obj.set_sv(slider_velocity)
                 hitobjects.append(slider_obj)
+            elif is_spinner(int(csv[3])):
+                hitobjects.append(Spinner.from_text(line))
             else:
                 hitobjects.append(HitCircle.from_text(line))
 

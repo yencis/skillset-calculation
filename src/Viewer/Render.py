@@ -99,7 +99,10 @@ def render(beatmap):
     print("Total beatmap duration: " + str(beatmap.get_duration()))
 
     slider_buffer = []  # store active sliders and end times
-    temp = []
+    temp = []  # sliders to be added to active sliders next iteration
+
+    spinner_buffer = []
+    spinner_temp = []
 
     step = 66.666666666667
 
@@ -127,23 +130,57 @@ def render(beatmap):
         slider_buffer = temp
         temp = []
 
+        for spinner in spinner_buffer:
+            if i <= spinner.endTime:
+                spinner_temp.append(spinner)
+
+        spinner_buffer = spinner_temp
+        spinner_temp = []
+
+        # render old spinners first so they are in the back
+
+        for spinner in spinner_buffer:  # realistically like 1 spinner
+
+            x_img = (spinner.x + x_offset) * scale
+            y_img = (spinner.y + y_offset) * scale
+
+            draw.ellipse(xy=[(x_img - y, y_img - y), (x_img + y, y_img + y)],
+                         fill=(0, 255, 0, int(255 // 2)))
+
+
+
         for obj in objects[::-1]:  # iterate in reverse for stacking
             opacity = beatmap.get_opacity_of_hitobject(obj, i)
 
             # process coordinates
 
-            if not obj.is_slider():
+            if obj.is_slider():
+
+                render_slider(draw, obj, opacity, x_offset, y_offset, radius, scale)
+                if obj.time < i + step:  # if slider is hit in between this frame and next frame
+                    temp.append(obj)
+
+            elif obj.is_spinner():
+
+                # render spinner
+
+                x_img = (obj.x + x_offset) * scale
+                y_img = (obj.y + y_offset) * scale
+
+                draw.ellipse(xy=[(x_img - y, y_img - y), (x_img + y, y_img + y)],
+                             fill=(0, 255, 0, int(255//2 * opacity)))
+                if obj.time < i + step:  # if spinner is hit in between this frame and next frame
+                    spinner_temp.append(obj)
+
+
+            else:
 
                 x_img = (obj.x + x_offset) * scale
                 y_img = (obj.y + y_offset) * scale
 
                 draw.ellipse(xy=[(x_img - radius, y_img - radius), (x_img + radius, y_img + radius)],
                              fill=(255, 0, 0, int(255 * opacity)))
-            else:
 
-                render_slider(draw, obj, opacity, x_offset, y_offset, radius, scale)
-                if obj.time < i + step:  # if slider is hit in between this frame and next frame
-                    temp.append(obj)
 
         # remove any sliders from active sliders that have already finished
 

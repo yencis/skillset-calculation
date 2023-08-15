@@ -18,6 +18,9 @@ class HitObject:
     def is_slider(self):
         return self.type & 2 == 2
 
+    def is_spinner(self):
+        return self.type & 8 == 8
+
     def __lt__(self, other):
         return self.time < other.time
 
