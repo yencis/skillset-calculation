@@ -1,6 +1,6 @@
 .env
 .env.*
-!.env.EXAMPLE
+!.env.example
 __pycache__
 .DS_Store
 .vscode

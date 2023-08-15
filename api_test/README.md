@@ -12,10 +12,11 @@ conda activate skillset
 Install the required packages as listed in `requirements.txt`
 
 ```
-pip install -r requirements.txt
+cd api_test
+pip3 install -r requirements.txt
 ```
 
-Register an osu! OAuth application by following the instructions [here](https://osu.ppy.sh/docs/index.html#registering-an-oauth-application).
+Register an osu! OAuth application by following the instructions [here](https://osu.ppy.sh/docs/index.html#registering-an-oauth-application). The callback URL does not matter, as we authenticate through the Client Credentials grant, meaning we do not need to "be" a user.
 
 Create a `.env` file:
 
