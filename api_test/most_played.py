@@ -35,6 +35,12 @@ for i in range(pages):
     cur_page = cur_page.json()
     cursor_string = cur_page["cursor_string"]
     for beatmapset in cur_page["beatmapsets"]:
-        sets.append(beatmapset["title"])
+        sets.append(beatmapset)
 
-print(*sets, sep="\n")
+print(*[b["title"] for b in sets], sep="\n")
+
+selection = 51
+# Grabs ID of the first map (index 0, not necessarily the lowest/highest star value) in the nth most played beatmap set (in this case, 51st)
+selected_map = sets[selection]["beatmaps"][0]["id"]
+selected_map_content = requests.get(f"https://osu.ppy.sh/osu/{selected_map}").text
+print(selected_map_content)
