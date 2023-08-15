@@ -21,6 +21,7 @@ access_token = token_response.json()["access_token"]
 
 pages = 4
 sets = []
+cursor_string = None
 for i in range(pages):
     cur_page = requests.get(
         BASE_OSU_API_URL + "beatmapsets/search",
@@ -29,9 +30,11 @@ for i in range(pages):
             "Accept": "application/json",
             "Content-Type": "application/json",
         },
-        params={"sort": "plays_desc"},
+        params={"sort": "plays_desc", "cursor_string": cursor_string},
     )
-    for beatmapset in cur_page.json()["beatmapsets"]:
+    cur_page = cur_page.json()
+    cursor_string = cur_page["cursor_string"]
+    for beatmapset in cur_page["beatmapsets"]:
         sets.append(beatmapset["title"])
 
 print(*sets, sep="\n")
