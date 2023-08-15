@@ -1,17 +1,37 @@
 from dotenv import load_dotenv
-from ossapi import Ossapi, BeatmapsetSearchSort
 import os
+import requests
+
+BASE_OSU_API_URL = "https://osu.ppy.sh/api/v2/"
+OSU_TOKEN_URL = "https://osu.ppy.sh/oauth/token"
 
 load_dotenv()
-api = Ossapi(
-    client_id=os.environ.get("OSU_CLIENT_ID"), client_secret=os.environ.get("OSU_CLIENT_SECRET")
+token_response = requests.post(
+    OSU_TOKEN_URL,
+    headers={"Accept": "application/json", "Content-Type": "application/x-www-form-urlencoded"},
+    data={
+        "client_id": str(os.environ.get("OSU_CLIENT_ID")),
+        "client_secret": str(os.environ.get("OSU_CLIENT_SECRET")),
+        "grant_type": "client_credentials",
+        "scope": "public",
+    },
 )
+token_response.raise_for_status()
+access_token = token_response.json()["access_token"]
 
-most_played = api.search_beatmapsets(sort=BeatmapsetSearchSort.PLAYS_DESCENDING)
-print([bp.title for bp in most_played.beatmapsets])
+pages = 4
+sets = []
+for i in range(pages):
+    cur_page = requests.get(
+        BASE_OSU_API_URL + "beatmapsets/search",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+        params={"sort": "plays_desc"},
+    )
+    for beatmapset in cur_page.json()["beatmapsets"]:
+        sets.append(beatmapset["title"])
 
-cursor = most_played.cursor
-print(most_played.cursor)
-
-most_played = api.search_beatmapsets(sort=BeatmapsetSearchSort.PLAYS_DESCENDING, cursor=cursor)
-print([bp.title for bp in most_played.beatmapsets])
+print(*sets, sep="\n")
