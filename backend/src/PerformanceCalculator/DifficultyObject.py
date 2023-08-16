@@ -24,7 +24,9 @@ class DifficultyObject:
         self.last_last_object = last_last_object
         self.delta_time = (self.hit_object.time - self.last_object.time) / clock_rate
         self.start_time = self.hit_object.time / clock_rate
-        self.end_time = None  # TODO: need get_end_time() for hitobjects
+        self.end_time = (
+            self.hit_object.endTime if self.hit_object.is_spinner() else self.hit_object.time
+        ) / clock_rate
         self.strain_time = max(self.MIN_DELTA_TIME, self.delta_time)
         self.lazy_jump_distance = None
         self.minimum_jump_distance = None
@@ -51,6 +53,8 @@ class DifficultyObject:
     def opacity_at(self, time: float, hidden: bool):
         if time > self.hit_object.time:
             return 0.0
+        # this function is only used for flashlight, TODO: implement for flashlight
+        return 1
 
     def set_distances(self, clock_rate: float):
         pass
