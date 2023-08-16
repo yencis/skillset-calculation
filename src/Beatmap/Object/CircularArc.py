@@ -77,8 +77,8 @@ class CircularArc:
         Parameter: s between 0 and 1 (percent of curve travel)
         """
         t = self.theta_range * s
-        x = self.center[0] + self.radius * np.cos(self.theta_start + t)
-        y = self.center[1] + self.radius * np.sin(self.theta_start + t)
+        x = self.center[0] + self.radius * np.cos(self.theta_start + self.direction * t)
+        y = self.center[1] + self.radius * np.sin(self.theta_start + self.direction * t)
         return np.array([x, y])
 
     def linearize(self):
