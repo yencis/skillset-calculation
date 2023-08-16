@@ -33,13 +33,13 @@ class DifficultyObject:
         self.angle: float | None = None
         self.hit_window_great = None
 
-    def previous(self, backwards_index):
+    def previous(self, backwards_index: int):
         try:
             return self.difficulty_objects[self.index - (backwards_index + 1)]
         except IndexError:
             return None
 
-    def next(self, forwards_index):
+    def next(self, forwards_index: int):
         try:
             return self.difficulty_objects[self.index + (forwards_index + 1)]
         except IndexError:
