@@ -27,7 +27,7 @@ class DifficultyCalculator:
                 skill.process(object)
         return self.create_difficulty_attributes(skills)
 
-    def preprocess_mods(self):
+    def preprocess_mods(self):  # TODO: HOW does this work?
         pass
 
     def create_skills(self):
@@ -79,7 +79,7 @@ class DifficultyCalculator:
             + base_flashlight_performance**1.1
         ) ** (1.0 / 1.1)
 
-        # TODO: magic number here
+        # TODO: magic number 1.14 multiplier in here
         star_rating = (
             (
                 (1.14 ** (1.0 / 3))
@@ -91,28 +91,24 @@ class DifficultyCalculator:
             else 0
         )
 
-        # TODO: preempt is re-calculated here?
-        drain_rate = self.beatmap.difficulty.hp
-        max_combo = len(self.beatmap.hitObjects)
-        hit_circle_count = sum(isinstance(x, HitCircle) for x in self.beatmap.hitObjects)
-        slider_count = sum(isinstance(x, Slider) for x in self.beatmap.hitObjects)
-        spinner_count = sum(isinstance(x, Spinner) for x in self.beatmap.hitObjects)
+        # TODO: preempt is re-calculated here in source? why?
+        max_combo = len(self.beatmap.hitObjects)  # TODO: this is INVALID for slider ticks
 
         attributes = DifficultyAttributes(
-            star_rating=None,
-            mods=None,
-            aim_difficulty=None,
-            speed_difficulty=None,
-            speed_note_count=None,
-            flashlight_difficulty=None,
-            slider_factor=None,
-            approach_rate=None,
-            overall_difficulty=None,
-            drain_rate=None,
-            max_combo=None,
-            hit_circle_count=None,
-            slider_count=None,
-            spinner_count=None,
+            star_rating=star_rating,
+            mods=self.mods,
+            aim_difficulty=aim_rating,
+            speed_difficulty=speed_rating,
+            speed_note_count=speed_notes,
+            flashlight_difficulty=flashlight_rating,
+            slider_factor=slider_factor,
+            approach_rate=self.beatmap.difficulty.ar,
+            overall_difficulty=self.beatmap.difficulty.od,
+            drain_rate=self.beatmap.difficulty.hp,
+            max_combo=max_combo,
+            hit_circle_count=sum(isinstance(x, HitCircle) for x in self.beatmap.hitObjects),
+            slider_count=sum(isinstance(x, Slider) for x in self.beatmap.hitObjects),
+            spinner_count=sum(isinstance(x, Spinner) for x in self.beatmap.hitObjects),
         )
 
         return attributes
