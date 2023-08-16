@@ -30,14 +30,14 @@ def render_slider(draw, obj, opacity, x_offset, y_offset, radius, scale):
     # more efficient slider code built from linear piecewise interpolation
     # need to go through less points
 
-    lin_points = obj.bezier.linear_points
+    lin_points = obj.linear_points
 
     last_point = [None, None]
     _l_p = None  # storing last point without coord conversion
 
     # cap short slider
-    corrected_len_ratio = np.clip(obj.length / obj.bezier.curve.length, 0, 1)
-    corrected_maximum_point = np.ndarray.flatten(obj.bezier.evaluate(corrected_len_ratio))
+    corrected_len_ratio = np.clip(obj.length / obj.inner_curve_length, 0, 1)
+    corrected_maximum_point = np.ndarray.flatten(obj.evaluate_curve(corrected_len_ratio))
 
     running_length = 0
 
@@ -70,7 +70,7 @@ def render_slider(draw, obj, opacity, x_offset, y_offset, radius, scale):
     # end array with circle at last point
 
     draw.ellipse(
-        xy=[(last_point[0] - radius, last_point[1] - radius), (last_point[0] + radius, last_point[1] + radius)],
+        xy=[(last_point[0] - radius, last_point[1] - radius), (last_point[0] + radius - 10, last_point[1] + radius - 10)],
         fill=(int(255 // 2 * opacity), 0, 0, 255))
 
     # draw a normal circle for sliderhead
@@ -82,7 +82,7 @@ def render_slider(draw, obj, opacity, x_offset, y_offset, radius, scale):
                  fill=(255, 0, 0, int(255 * opacity)))
 
 
-def render(beatmap):
+def render(beatmap, output="output_2.mp4"):
     print("Begin rendering")
     x = 512
     y = 384
@@ -94,7 +94,7 @@ def render(beatmap):
     radius = (54.4 - 4.48 * beatmap.difficulty.cs) * scale
 
     fourcc = cv2.VideoWriter_fourcc(*'avc1')
-    video = cv2.VideoWriter("output_2.mp4", fourcc, 15, dim)
+    video = cv2.VideoWriter(output, fourcc, 15, dim)
 
     print("Total beatmap duration: " + str(beatmap.get_duration()))
 

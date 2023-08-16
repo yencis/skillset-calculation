@@ -1,3 +1,5 @@
+import numpy as np
+
 class ControlPoint:
 
     def __init__(self, x, y):
@@ -18,3 +20,12 @@ class ControlPoint:
 
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
+
+    def lengthSquared(self):
+        """
+        Treat this control point as a vector and get it's length squared
+        """
+        return self.x ** 2 + self.y ** 2
+
+    def as_ndarray(self):
+        return np.array([self.x, self.y])

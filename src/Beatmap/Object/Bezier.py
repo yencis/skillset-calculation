@@ -26,7 +26,7 @@ class Bezier:
         self.beziers = [self._approximate_bspline(bezier_points) for bezier_points in _beziers]
 
 
-        self.curve = self._approximate_bspline(control_points)  # here for legacy reasons so shit doesn't fuck up yet
+        # self.curve = self._approximate_bspline(control_points)  # here for legacy reasons so shit doesn't fuck up yet
 
         self.total_bezier_length = 0
 
@@ -57,6 +57,7 @@ class Bezier:
 
         Returns: coordinate of bezier at s of bezier
 
+        Will fail if s is too large
         """
         running_length = 0
 
