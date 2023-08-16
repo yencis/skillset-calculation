@@ -15,7 +15,7 @@ class TimingPoint:
     def from_text(cls, text):
         csv = text.split(",")
         time = int(csv[0])
-        beat_length = float(csv[0])
+        beat_length = float(csv[1])
         return cls(time, beat_length, 1 if beat_length > 0 else 0)
 
     @classmethod

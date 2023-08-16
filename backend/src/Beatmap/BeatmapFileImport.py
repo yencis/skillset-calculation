@@ -3,6 +3,7 @@ from Beatmap.Object.TimingPoint import TimingPoint
 from Beatmap.Object.Slider import Slider
 from Beatmap.Object.HitObject import HitObject
 from Beatmap.Object.HitCircle import HitCircle
+from Beatmap.Object.Spinner import Spinner
 
 """
 Import hitobjects from .osu file
@@ -11,6 +12,9 @@ Import hitobjects from .osu file
 
 def is_slider(obj_type):
     return obj_type & 2 == 2
+
+def is_spinner(obj_type):
+    return obj_type & 8 == 8
 
 
 def import_beatmap(filename):
@@ -48,8 +52,9 @@ def import_beatmap(filename):
         slider_multiplier = difficulty_settings["SliderMultiplier"]
         slider_tick_rate = difficulty_settings["SliderTickRate"]
 
-        current_beatmap = Beatmap.Beatmap(hp_drain_rate, circle_size, overall_difficulty, approach_rate, slider_multiplier,
-                                  slider_tick_rate)
+        current_beatmap = Beatmap.Beatmap(hp_drain_rate, circle_size, overall_difficulty, approach_rate,
+                                          slider_multiplier,
+                                          slider_tick_rate)
 
         # skip lines until we reach timing points
 
@@ -58,6 +63,7 @@ def import_beatmap(filename):
                 break
 
         timing_points = []
+        red_timing_points = []
 
         # process each line as a unique timing point until reaching a newline
 
@@ -69,8 +75,11 @@ def import_beatmap(filename):
                 break
 
             timing_points.append(TimingPoint.from_text(line))
+            if not timing_points[-1].is_inherited():
+                red_timing_points.append(timing_points[-1])
 
         current_beatmap.timingPoints = timing_points
+        current_beatmap.redTimingPoints = red_timing_points
 
         assert current_beatmap.check_timings()
 
@@ -93,13 +102,19 @@ def import_beatmap(filename):
 
             csv = line.split(",")
 
-
-
             if is_slider(int(csv[3])):
-                hitobjects.append(Slider.from_text(line))
+
+                # check sv at this moment
+                slider_obj = Slider.from_text(line)
+                slider_velocity = current_beatmap.get_sv_at(slider_obj.time)
+                slider_obj.set_sv(slider_velocity)
+                hitobjects.append(slider_obj)
+            elif is_spinner(int(csv[3])):
+                hitobjects.append(Spinner.from_text(line))
             else:
                 hitobjects.append(HitCircle.from_text(line))
 
         current_beatmap.hitObjects = hitobjects
 
     return current_beatmap
+
