@@ -3,13 +3,14 @@ from DifficultyObject import DifficultyObject
 from Skills.Aim import Aim
 from Skills.Speed import Speed
 from Skills.Flashlight import Flashlight
+from Beatmap.Beatmap import Beatmap
 
 
 class DifficultyCalculator:
-    def __init__(self, beatmap, mods, clockrate) -> None:
+    def __init__(self, beatmap: Beatmap, mods: list[int], clock_rate: float) -> None:
         self.beatmap = beatmap
         self.mods = mods
-        self.clockrate = clockrate
+        self.clock_rate = clock_rate
 
     def calculate_difficulty(self):
         self.preprocess_mods()
@@ -36,7 +37,7 @@ class DifficultyCalculator:
 
         return objects
 
-    def create_difficulty_attributes(self, skills):
+    def create_difficulty_attributes(self, skills: list[int]):
         attributes = DifficultyAttributes(
             star_rating=None,
             mods=None,
