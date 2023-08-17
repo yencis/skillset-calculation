@@ -1,9 +1,9 @@
 from Beatmap import Beatmap
-from Beatmap.Object.TimingPoint import TimingPoint
-from Beatmap.Object.Slider import Slider
-from Beatmap.Object.HitObject import HitObject
-from Beatmap.Object.HitCircle import HitCircle
-from Beatmap.Object.Spinner import Spinner
+from Object.TimingPoint import TimingPoint
+from Object.Slider import Slider
+from Object.HitObject import HitObject
+from Object.HitCircle import HitCircle
+from Object.Spinner import Spinner
 
 """
 Import hitobjects from .osu file
@@ -52,7 +52,7 @@ def import_beatmap(filename):
         slider_multiplier = difficulty_settings["SliderMultiplier"]
         slider_tick_rate = difficulty_settings["SliderTickRate"]
 
-        current_beatmap = Beatmap.Beatmap(hp_drain_rate, circle_size, overall_difficulty, approach_rate,
+        current_beatmap = Beatmap(hp_drain_rate, circle_size, overall_difficulty, approach_rate,
                                           slider_multiplier,
                                           slider_tick_rate)
 
