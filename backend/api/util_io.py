@@ -13,4 +13,5 @@ def text_to_file(text):
     String of text (usually the contents of a .osu file as string)
     converted to a Python File object
     """
+    #print(text)
     return StringIO(text)

@@ -1,7 +1,7 @@
-from Beatmap.Object.HitObject import HitObject
-from Beatmap.Object.ControlPoint import ControlPoint
-from Beatmap.Object.Bezier import Bezier
-from Beatmap.Object.CircularArc import CircularArc
+from backend.src.Beatmap.Object.HitObject import HitObject
+from backend.src.Beatmap.Object.ControlPoint import ControlPoint
+from backend.src.Beatmap.Object.Bezier import Bezier
+from backend.src.Beatmap.Object.CircularArc import CircularArc
 import numpy as np
 
 
@@ -11,6 +11,7 @@ class Slider(HitObject):
         super().__init__(x, y, time, type)
         self.curveType = curveType  # B = bezier C = catmull L = linear P = circle
         self.curvePoints = curvePoints  # list of control points
+
         self.sliders = sliders
         self.length = length
         self.slider_velocity = -1  # if sv hasnt been set, defaults to -1
@@ -38,6 +39,15 @@ class Slider(HitObject):
             self.bezier = Bezier(curvePoints)  # bezier placeholder, it'll probably look better anyways
             self.linear_points = self.bezier.linear_points
             self.inner_curve_length = self.bezier.total_bezier_length
+
+        last_points = None
+        self.control_points = []  # count red points as one point
+        for p in self.curvePoints:
+            if not last_points or not (last_points == p):
+                self.control_points.append(p)
+                last_points = p
+            else:
+                continue
 
     @classmethod
     def from_text(cls, text):

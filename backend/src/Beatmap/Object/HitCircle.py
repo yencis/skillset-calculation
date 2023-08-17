@@ -1,4 +1,4 @@
-from Beatmap.Object.HitObject import HitObject
+from backend.src.Beatmap.Object.HitObject import HitObject
 
 
 class HitCircle(HitObject):

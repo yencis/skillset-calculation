@@ -1,5 +1,5 @@
-import Beatmap.Object.HitObject as HitObject
-import Beatmap.Object.TimingPoint as TimingPoint
+import backend.src.Beatmap.Object.HitObject as HitObject
+import backend.src.Beatmap.Object.TimingPoint as TimingPoint
 import bisect
 
 

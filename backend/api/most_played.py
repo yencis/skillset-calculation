@@ -21,7 +21,7 @@ token_response = requests.post(
 token_response.raise_for_status()
 access_token = token_response.json()["access_token"]
 
-pages = 1
+pages = 200
 sets = []
 cursor_string = None
 for i in range(pages):
@@ -32,7 +32,7 @@ for i in range(pages):
             "Accept": "application/json",
             "Content-Type": "application/json",
         },
-        params={"sort": "plays_desc", "cursor_string": cursor_string},
+        params={"mode":0, "sort": "plays_desc", "cursor_string": cursor_string},
     )
     cur_page = cur_page.json()
     cursor_string = cur_page["cursor_string"]
