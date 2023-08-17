@@ -36,6 +36,9 @@ class Beatmap:
             self.preempt += 600 * (5 - self.difficulty.ar) / 5
             self.fade_in += 400 * (5 - self.difficulty.ar) / 5
 
+    def get_max_combo(self):
+        pass  # TODO: implement this jonathan
+
     def check_timings(self):
         return len(self.timingPoints) > 0
 
@@ -45,8 +48,9 @@ class Beatmap:
         """
 
         lb = bisect.bisect_left(self.hitObjects, HitObject.HitObject.key_time(time))
-        ub = bisect.bisect(self.hitObjects,
-                           HitObject.HitObject.key_time(time + self.preempt))  # right binsearch, subtract 1
+        ub = bisect.bisect(
+            self.hitObjects, HitObject.HitObject.key_time(time + self.preempt)
+        )  # right binsearch, subtract 1
         return [self.hitObjects[obj] for obj in range(lb, ub)]
 
     def get_opacity_of_hitobject(self, hitobject, time):
@@ -63,7 +67,6 @@ class Beatmap:
         return 1 - ((hit_interval - full_opacity) / self.fade_in)
 
     def get_beat_at(self, time):
-
         assert self.check_timings()
 
         index = bisect.bisect(self.redTimingPoints, TimingPoint.TimingPoint.key_time(time)) - 1
@@ -71,7 +74,6 @@ class Beatmap:
         return self.redTimingPoints[index].beat_length
 
     def get_sv_at(self, time):  # we want slider velocity in osu pixels per millisecond
-
         # check if there is at least 1 timing point
 
         assert self.check_timings()
@@ -80,14 +82,14 @@ class Beatmap:
 
         # check if timing point is inherited
 
-        base_slider_velocity = self.difficulty.sm * 100  # difficulty.sm is 100s of osupixels per beat
-
+        base_slider_velocity = (
+            self.difficulty.sm * 100
+        )  # difficulty.sm is 100s of osupixels per beat
 
         if self.timingPoints[index].is_inherited():
-            timing_slider_multiplier = - (100 / self.timingPoints[index].beat_length)
+            timing_slider_multiplier = -(100 / self.timingPoints[index].beat_length)
         else:
             timing_slider_multiplier = 1
-
 
         slider_velocity = base_slider_velocity * timing_slider_multiplier
 
@@ -96,7 +98,6 @@ class Beatmap:
         return slider_velocity / self.get_beat_at(time)
 
     def get_duration(self):
-
         if self.hitObjects[-1].is_slider():
             return self.hitObjects[-1].time + self.hitObjects[-1].travel_time() + 1000
         else:

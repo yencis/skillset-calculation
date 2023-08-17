@@ -7,13 +7,14 @@ from Beatmap.Beatmap import Beatmap
 from Beatmap.Object.HitCircle import HitCircle
 from Beatmap.Object.Slider import Slider
 from Beatmap.Object.Spinner import Spinner
+from Mods import Mods
 import math
 
 
 class DifficultyCalculator:
     DIFFICULTY_MULTIPLIER = 0.0675
 
-    def __init__(self, beatmap: Beatmap, mods: list[int], clock_rate: float) -> None:
+    def __init__(self, beatmap: Beatmap, mods: list[Mods], clock_rate: float) -> None:
         self.beatmap = beatmap
         self.mods = mods
         self.clock_rate = clock_rate
@@ -28,7 +29,20 @@ class DifficultyCalculator:
         return self.create_difficulty_attributes(skills)
 
     def preprocess_mods(self):  # TODO: HOW does this work?
-        pass
+        if Mods.DOUBLETIME in self.mods:
+            clock_rate *= 1.5
+        if Mods.HARDROCK in self.mods:
+            self.beatmap.difficulty.cs *= 1.3
+            self.beatmap.difficulty.ar *= 1.4
+            self.beatmap.difficulty.hp *= 1.4
+            self.beatmap.difficulty.od *= 1.4
+        if Mods.HALFTIME in self.mods:
+            clock_rate *= 0.75
+        if Mods.EASY in self.mods:
+            self.beatmap.difficulty.cs *= 0.5
+            self.beatmap.difficulty.ar *= 0.5
+            self.beatmap.difficulty.hp *= 0.5
+            self.beatmap.difficulty.od *= 0.5
 
     def create_skills(self):
         return [
@@ -84,14 +98,12 @@ class DifficultyCalculator:
             (
                 (1.14 ** (1.0 / 3))
                 * 0.027
-                * ((100000 / (2 ** (1.0 / 1.1))) ** (1.0 / 3) * base_performance)
-                + 4
+                * (((100000 / (2 ** (1.0 / 1.1))) ** (1.0 / 3) * base_performance) + 4)
             )
             if base_performance > 0.00001
             else 0
         )
 
-        # TODO: preempt is re-calculated here in source? why?
         max_combo = len(self.beatmap.hitObjects)  # TODO: this is INVALID for slider ticks
 
         attributes = DifficultyAttributes(
