@@ -98,10 +98,26 @@ class OSUAPI:
                 sets.append(beatmapset)
         return sets
 
-    def get_beatmap(self, beatmap_id):
+    @staticmethod
+    def get_beatmap(beatmap_id):
         """
         Get beatmap by id
 
         Returns beatmap .osu file as text
         """
         return requests.get(f"https://osu.ppy.sh/osu/{beatmap_id}").text
+
+    @staticmethod
+    def get_beatmaps_in_beatmapset(beatmapset_json, sort_by=None, reverse=False):
+        """
+        Get beatmaps in beatmapset in the order given by sort_by (or unsorted if None)
+
+        Returns: list of beatmaps in beatmapset in given order
+        """
+
+        beatmaps = beatmapset_json["beatmaps"]
+
+        if sort_by:
+            beatmaps = sorted(beatmaps, key=lambda beatmap: beatmap[sort_by], reverse=reverse)
+
+        return beatmaps
