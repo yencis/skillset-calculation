@@ -39,8 +39,9 @@ for i in range(pages):
 
 print(*[b["title"] for b in sets], sep="\n")
 
-selection = 51
+selection = 94
 # Grabs ID of the first map (index 0, not necessarily the lowest/highest star value) in the nth most played beatmap set (in this case, 51st)
 selected_map = sets[selection]["beatmaps"][0]["id"]
 selected_map_content = requests.get(f"https://osu.ppy.sh/osu/{selected_map}").text
 print(selected_map_content)
+
