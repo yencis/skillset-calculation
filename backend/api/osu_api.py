@@ -4,6 +4,9 @@ import requests
 
 
 class OSUAPI:
+    """
+    Instantiate API wrapper object with token and client secret.
+    """
     def __init__(self):
         self.BASE_OSU_API_URL = "https://osu.ppy.sh/api/v2/"
         OSU_TOKEN_URL = "https://osu.ppy.sh/oauth/token"
@@ -110,7 +113,8 @@ class OSUAPI:
     @staticmethod
     def get_beatmaps_in_beatmapset(beatmapset_json, sort_by=None, reverse=False):
         """
-        Get beatmaps in beatmapset in the order given by sort_by (or unsorted if None)
+        Get beatmaps in beatmapset in the order given by ``sort_by`` (or unsorted if None) where ``sort_by`` is a
+        beatmap attribute
 
         Returns: list of beatmaps in beatmapset in given order
         """

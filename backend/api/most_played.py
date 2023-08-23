@@ -21,7 +21,7 @@ token_response = requests.post(
 token_response.raise_for_status()
 access_token = token_response.json()["access_token"]
 
-pages = 200
+pages = 2
 sets = []
 cursor_string = None
 for i in range(pages):
@@ -51,6 +51,8 @@ util_io.write_list_to_file(id_list, filename="top5000byplaycount.txt")
 selection = 94
 # Grabs ID of the first map (index 0, not necessarily the lowest/highest star value) in the nth most played beatmap set (in this case, 51st)
 selected_map = sets[selection]["beatmaps"][0]["id"]
-selected_map_content = requests.get(f"https://osu.ppy.sh/osu/{selected_map}").text
+selected_map_content = requests.get(f"https://osu.ppy.sh/osu/{selected_map}")
+print(type(selected_map_content))
 #print(selected_map_content)
 
+print(sets[selection])
