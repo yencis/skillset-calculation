@@ -125,3 +125,31 @@ class OSUAPI:
             beatmaps = sorted(beatmaps, key=lambda beatmap: beatmap[sort_by], reverse=reverse)
 
         return beatmaps
+
+    def get_user_score(self, user_id, score_type, limit):
+        """
+        Currently returns raw JSON
+
+        Parameters:
+            * user_id: int
+            * score_type: string
+            One of 'best', 'firsts', 'recent'
+            * limit: int
+            There are other parameters but I will add them later
+
+        Returns:
+            * Response
+                Please call .json() on the result. I will parse this better later
+        """
+        result = requests.get(self.BASE_OSU_API_URL
+                              + "users/"+str(user_id)+"/scores/"+str(score_type)
+                              ,
+                              headers={
+                                  "Authorization": f"Bearer {self.access_token}",
+                                  "Accept": "application/json",
+                                  "Content-Type": "application/json",
+                              },
+                              params={"include_fails": "0",
+                                      "limit": str(limit)}
+                              )
+        return result
