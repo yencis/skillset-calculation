@@ -1,9 +1,9 @@
-import backend.src.Beatmap.Beatmap as beatmap
-from backend.src.Beatmap.Object.TimingPoint import TimingPoint
-from backend.src.Beatmap.Object.Slider import Slider
-from backend.src.Beatmap.Object.HitObject import HitObject
-from backend.src.Beatmap.Object.HitCircle import HitCircle
-from backend.src.Beatmap.Object.Spinner import Spinner
+import Beatmap as beatmap
+from Object.TimingPoint import TimingPoint
+from Object.Slider import Slider
+from Object.HitObject import HitObject
+from Object.HitCircle import HitCircle
+from Object.Spinner import Spinner
 
 """
 Import hitobjects from .osu file

@@ -101,6 +101,29 @@ class OSUAPI:
                 sets.append(beatmapset)
         return sets
 
+    def get_forum_topic(self, topic_id):
+        cur_page = requests.get(
+            self.BASE_OSU_API_URL + "forums/topics/"+str(topic_id),
+            headers={
+                "Authorization": f"Bearer {self.access_token}",
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+        )
+        return cur_page.json()
+
+    def edit_post(self, post_id):
+        cur_page = requests.get(
+            self.BASE_OSU_API_URL + "forums/posts/"+str(post_id),
+            headers={
+                "Authorization": f"Bearer {self.access_token}",
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            params={"body":"yo"}
+        )
+        return cur_page.json()
+
     @staticmethod
     def get_beatmap(beatmap_id):
         """
@@ -150,6 +173,7 @@ class OSUAPI:
                                   "Content-Type": "application/json",
                               },
                               params={"include_fails": "0",
-                                      "limit": str(limit)}
+                                      "limit": str(limit),
+                                      "offset": "2"}
                               )
         return result
